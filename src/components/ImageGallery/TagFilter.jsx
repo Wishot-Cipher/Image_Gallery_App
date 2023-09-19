@@ -10,7 +10,7 @@ const TagFilter = ({ handleFilter }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col">
+    <form onSubmit={handleSubmit} className="lg:flex flex-col hidden">
       <h2 className="text-xl font-semibold mb-2">Filter by Tag</h2>
       <input
         type="text"
