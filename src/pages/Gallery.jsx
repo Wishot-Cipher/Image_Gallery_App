@@ -45,7 +45,7 @@ const Gallery = () => {
           </>
         ) : (
           <Link to={"/login"}>
-            <button className=" bg-slate-600 text-white p-4 rounded-xl">
+            <button className=" bg-slate-600 text-white p-4 rounded-xl flex ml-4 justify-center">
               Log In
             </button>
           </Link>
