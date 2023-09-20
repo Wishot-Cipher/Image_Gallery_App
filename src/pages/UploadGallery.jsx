@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { DndContext, closestCenter, MouseSensor, TouchSensor, DragOverlay, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { Grid } from "../components/ImageGallery/Grid";
@@ -13,11 +13,15 @@ import 'react-toastify/dist/ReactToastify.css';
 const UploadGallery = () => {
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
-  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  const mouse = useSensor(MouseSensor);
+  const touch = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 250,
+      tolerance: 5,
+    },
+  });
+  const sensors = useSensors(mouse, touch);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isTouchHold, setIsTouchHold] = useState(false);
-
-  const scrollTimeoutRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -29,29 +33,6 @@ const UploadGallery = () => {
     });
 
     return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    let touchTimer;
-
-    const touchStartHandler = () => {
-      touchTimer = setTimeout(() => {
-        setIsTouchHold(true);
-      }, 2000); // 2 seconds delay
-    };
-
-    const touchEndHandler = () => {
-      clearTimeout(touchTimer);
-      setIsTouchHold(false);
-    };
-
-    window.addEventListener('touchstart', touchStartHandler);
-    window.addEventListener('touchend', touchEndHandler);
-
-    return () => {
-      window.removeEventListener('touchstart', touchStartHandler);
-      window.removeEventListener('touchend', touchEndHandler);
-    };
   }, []);
 
   useEffect(() => {
@@ -70,16 +51,9 @@ const UploadGallery = () => {
       });
   }, []);
 
-  function handleScroll() {
-    clearTimeout(scrollTimeoutRef.current);
-    scrollTimeoutRef.current = setTimeout(() => {
-      setIsTouchHold(false);
-    }, 500); // Set a timeout to disable touch hold after 0.5 seconds
-  }
-
   function handleDragStart(event) {
-    if (!loggedIn || isTouchHold) {
-      toast.error('🦄 User not logged in or touch hold detected. Drag disabled', {
+    if (!loggedIn) {
+      toast.error('🦄 User not logged in. Drag disabled', {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
