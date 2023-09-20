@@ -16,6 +16,7 @@ const UploadGallery = () => {
   const [activeId, setActiveId] = useState(null);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isTouchHold, setIsTouchHold] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -27,6 +28,29 @@ const UploadGallery = () => {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    let touchTimer;
+
+    const touchStartHandler = () => {
+      touchTimer = setTimeout(() => {
+        setIsTouchHold(true);
+      }, 2000); // 2 seconds delay
+    };
+
+    const touchEndHandler = () => {
+      clearTimeout(touchTimer);
+      setIsTouchHold(false);
+    };
+
+    window.addEventListener('touchstart', touchStartHandler);
+    window.addEventListener('touchend', touchEndHandler);
+
+    return () => {
+      window.removeEventListener('touchstart', touchStartHandler);
+      window.removeEventListener('touchend', touchEndHandler);
+    };
   }, []);
 
   useEffect(() => {
@@ -46,9 +70,8 @@ const UploadGallery = () => {
   }, []);
 
   function handleDragStart(event) {
-    if (!loggedIn) {
-      // console.log("User not logged in. Drag disabled.");
-      toast.error('🦄 User not logged in. Drag disabled ', {
+    if (!loggedIn || isTouchHold) {
+      toast.error('🦄 User not logged in or touch hold detected. Drag disabled', {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -57,7 +80,7 @@ const UploadGallery = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-        })
+      });
       event.cancel();
       return;
     }
