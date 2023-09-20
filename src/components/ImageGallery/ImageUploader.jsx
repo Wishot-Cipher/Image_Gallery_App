@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from "react";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import logo from "../../assets/unnamed.gif"
+import { Link } from "react-router-dom";
+import SearchBar from "./SearchBar";
 
 const ImageUploader = ({ onUpload }) => {
   const [images, setImages] = useState([]);
@@ -23,40 +26,57 @@ const ImageUploader = ({ onUpload }) => {
         .then((snapshot) => {
           getDownloadURL(snapshot.ref) // Get download URL from the reference
             .then((downloadURL) => {
-              toast.success('Image uploaded successfully!');
+              toast.success("Image uploaded successfully!");
               setIsUploading(false);
               onUpload([{ url: downloadURL, altText: image.name }, ...images]);
             })
             .catch((error) => {
-              console.error('Error getting download URL:', error);
+              console.error("Error getting download URL:", error);
             });
         })
         .catch((error) => {
-          console.error('Error uploading image:', error);
-          toast.error('Image upload failed.');
+          console.error("Error uploading image:", error);
+          toast.error("Image upload failed.");
           setIsUploading(false);
         });
     });
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-2">Upload Image</h2>
-      <input
-        type="file"
-        multiple
-        onChange={handleImageUpload}
-        className="mb-4"
-      />
-      <button
-        onClick={handleUpload}
-        className="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700"
-        disabled={isUploading}
+    <>
+      {/* <div
+        className="text-white text-md sticky top-0 bg-opacity-80 backdrop-blur-lx p-4 bg-slate-700 px-4 py-2 my-4 lg_pro:mb-8 rounded-sm shadow-xl block"
       >
-        {isUploading ? 'Uploading...' : 'Upload Images'}
-      </button>
-      <ToastContainer />
-    </div>
+        <div>
+          <img src={logo} alt="wisht logo" className="object-cover max-w-[20%] w-14"/>
+        </div>
+        <div>
+
+        </div>
+      </div> */}
+      <div className="max-w-4xl mx-auto p-6 bg-white border rounded-lg shadow-lg mb-16">
+        <Link
+          to="/"
+          className="text-white text-md bg-slate-700 px-4 py-2 my-4 lg_pro:mb-8 rounded-lg shadow-xl block"
+        >
+          <SearchBar />
+        </Link>
+        <h2 className="text-xl font-bold mb-4 text-center">Upload Image</h2>
+        <input
+          type="file"
+          multiple
+          onChange={handleImageUpload}
+          className="mb-4 p-2 border rounded-xl w-full"
+        />
+        <button
+          onClick={handleUpload}
+          className="bg-gradient-to-r from-pink-400 to-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-lx hover:bg-slate-800 w-[50%] mx-auto block"
+          disabled={isUploading}
+        >
+          {isUploading ? "Uploading..." : "Upload Images"}
+        </button>
+      </div>
+    </>
   );
 };
 

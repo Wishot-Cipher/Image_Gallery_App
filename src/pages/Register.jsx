@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import image from "../assets/register.jpg";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -60,15 +61,17 @@ const Register = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen justify-center flex flex-col sm:px-6 lg:px-8 bg-[url(/src/assets/loginBackground.jpg)]">
-      <div className="sm:mx-auto sm:w-full sm:max-w-lg mx-2 border-[#86aaf9] border-4 border-opacity-30 shadow-2xl bg-white rounded-md ">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md py-4">
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-800 md:text-[35px]">
-            Sign Up
-          </h2>
+    <div className="flex justify-center items-center min-h-screen bg-cover bg-no-repeat sm:w-full">
+      <div className="max-w-4xl w-full mx-auto lg:flex items-center justify-between bg-white p-4 rounded-lg shadow-lg border-slate-400 border-4 border-opacity-30">
+        <div className="w-full lg:w-1/2">
+          <img src={image} alt="" className="w-full h-auto" />
         </div>
-
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="w-full lg:w-1/2 mt-8 lg:mt-0 ml-0 lg:ml-8">
+          <div className="sm:mx-auto sm:w-full sm:max-w-md py-4">
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-800 md:text-[35px]">
+              Sign Up
+            </h2>
+          </div>
           <form className="space-y-6" onSubmit={handleSignUp}>
             <div>
               <label
@@ -163,6 +166,7 @@ const Register = () => {
               </button>
             </div>
           </form>
+
           <div className="text-center mt-3">
             <button
               onClick={signInWithGoogle}
@@ -171,8 +175,9 @@ const Register = () => {
               Sign Up with Google
             </button>
           </div>
+
           <div className=" text-center text-xs my-2 font-semibold">
-            Have an acctount ?
+            Have an account?
             <Link className=" text-blue-500 underline font-bold" to={"/login"}>
               Sign In
             </Link>
