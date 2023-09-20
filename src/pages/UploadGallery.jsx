@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DndContext, closestCenter, MouseSensor, TouchSensor, DragOverlay, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { Grid } from "../components/ImageGallery/Grid";
@@ -16,6 +16,8 @@ const UploadGallery = () => {
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   const [loggedIn, setLoggedIn] = useState(false);
   const [isTouchHold, setIsTouchHold] = useState(false);
+
+  const scrollTimeoutRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -67,6 +69,13 @@ const UploadGallery = () => {
         console.error("Error fetching images:", error);
       });
   }, []);
+
+  function handleScroll() {
+    clearTimeout(scrollTimeoutRef.current);
+    scrollTimeoutRef.current = setTimeout(() => {
+      setIsTouchHold(false);
+    }, 500); // Set a timeout to disable touch hold after 0.5 seconds
+  }
 
   function handleDragStart(event) {
     if (!loggedIn || isTouchHold) {
