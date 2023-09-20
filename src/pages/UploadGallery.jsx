@@ -10,7 +10,6 @@ import { auth } from "../firebaseConfig/config";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const UploadGallery = () => {
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
