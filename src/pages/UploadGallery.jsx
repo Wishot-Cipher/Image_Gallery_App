@@ -18,7 +18,10 @@ import {
 import { Grid } from "../components/ImageGallery/Grid";
 import { SortablePhoto } from "../components/ImageGallery/SortablePhoto";
 import { Photo } from "../components/ImageGallery/Photo";
+import { doc, getDoc } from "firebase/firestore";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { database } from "../firebaseConfig/config";
 import { firestore } from "../firebaseConfig/config";
 import { auth } from "../firebaseConfig/config";
 import { toast } from "react-toastify";
@@ -50,21 +53,31 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const storageRef = ref(firestore);
+// ...
 
-    listAll(storageRef)
-      .then((res) => {
-        const promises = res.items.map((item) => getDownloadURL(item));
-        return Promise.all(promises);
-      })
-      .then((downloadURLs) => {
-        setItems(downloadURLs);
-      })
-      .catch((error) => {
-        console.error("Error fetching images:", error);
-      });
-  }, []);
+useEffect(() => {
+  const fetchImages = async () => {
+    const imagesCollectionRef = collection(database, "images");
+    const querySnapshot = await getDocs(imagesCollectionRef);
+
+    const downloadURLs = [];
+
+    querySnapshot.forEach((doc) => {
+      // Assuming you have a field 'url' in your document
+      const url = doc.data().url;
+      downloadURLs.push(url);
+    });
+
+    setItems(downloadURLs);
+  };
+
+  fetchImages().catch((error) => {
+    console.error("Error fetching images:", error);
+  });
+}, []);
+
+// ...
+
 
   useEffect(() => {
     const filtered = items.filter((item) =>
@@ -139,7 +152,7 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
                     tags={url.tags}
                   />
                 ))
-              : filteredItems.map((url, index, tags) => (
+              : filteredItems.map((url, index) => (
                   <SortablePhoto key={url} url={url} index={index} />
                 ))}
           </Grid>

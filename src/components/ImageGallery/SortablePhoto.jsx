@@ -1,11 +1,13 @@
+
+
 import React from 'react';
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 
 import {Photo} from './Photo';
 
-export const SortablePhoto = ({url, index, tags}) => {
-  const sortable = useSortable({id: url});
+export const SortablePhoto = (props) => {
+  const sortable = useSortable({id: props.url});
   const {
     attributes,
     listeners,
@@ -24,11 +26,10 @@ export const SortablePhoto = ({url, index, tags}) => {
     <Photo
       ref={setNodeRef}
       style={style}
-      url={url} // Pass url to Photo
-      index={index} // Pass index to Photo
-      tags={tags} // Pass tags to Photo
+      {...props}
       {...attributes}
       {...listeners}
     />
   );
 };
+

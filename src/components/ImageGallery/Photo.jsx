@@ -21,7 +21,7 @@ export const Photo = forwardRef(
           index === 0 ? "h-[410px]" : "h-[350px] lg:h-[280px]"
         } block relative`}
       >
-        {tags && (
+        {/* {tags && (
           <div className="tags absolute bottom-4 left-4">
             {tags.map((tag, index) => (
               <span
@@ -32,7 +32,7 @@ export const Photo = forwardRef(
               </span>
             ))}
           </div>
-        )}
+        )} */}
       </div>
     );
   }

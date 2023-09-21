@@ -33,7 +33,7 @@ export function Grid({ children, columns, handleSearch, searchResults }) {
       )}
 
       {user && (
-        <div className="flex justify-between p-4 bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500 h-[10vh] lg:h-[11vh]">
+        <div className="flex justify-between p-4 bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500 h-[78px] lg:h-[11vh]">
           <div className="text-white">
             <h1 className="text-2xl font-bold">Gallery</h1>
           </div>
