@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { DndContext, closestCenter, MouseSensor, TouchSensor, DragOverlay, useSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+import {
+  DndContext,
+  closestCenter,
+  MouseSensor,
+  TouchSensor,
+  DragOverlay,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
 import { Grid } from "../components/ImageGallery/Grid";
 import { SortablePhoto } from "../components/ImageGallery/SortablePhoto";
 import { Photo } from "../components/ImageGallery/Photo";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { firestore } from "../firebaseConfig/config";
 import { auth } from "../firebaseConfig/config";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const UploadGallery = () => {
+const UploadGallery = ({ searchResults, handleSearch }) => {
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
   const mouse = useSensor(MouseSensor);
@@ -22,6 +34,7 @@ const UploadGallery = () => {
   });
   const sensors = useSensors(mouse, touch);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [filteredItems, setFilteredItems] = useState([]);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -37,7 +50,7 @@ const UploadGallery = () => {
 
   useEffect(() => {
     const storageRef = ref(firestore);
-
+  
     listAll(storageRef)
       .then((res) => {
         const promises = res.items.map((item) => getDownloadURL(item));
@@ -51,9 +64,21 @@ const UploadGallery = () => {
       });
   }, []);
 
+  useEffect(() => {
+    const filtered = items.filter((item) =>
+      searchResults.some((searchItem) => searchItem.id === item.id)
+    );
+
+    if (searchResults.length > 0) {
+      setFilteredItems(filtered);
+    } else {
+      setFilteredItems(items);
+    }
+  }, [searchResults, items]);
+
   function handleDragStart(event) {
     if (!loggedIn) {
-      toast.error('🦄 User not logged in. Drag disabled', {
+      toast.error("🦄 User not logged in. Drag disabled", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -96,11 +121,19 @@ const UploadGallery = () => {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <SortableContext items={items} strategy={rectSortingStrategy}>
-        <Grid columns={4}>
-          {items.map((url, index) => (
-            <SortablePhoto key={url} url={url} index={index} />
-          ))}
+      <SortableContext items={filteredItems} strategy={rectSortingStrategy}>
+        <Grid
+          columns={4}
+          searchResults={searchResults}
+          handleSearch={handleSearch}
+        >
+          {searchResults.length > 0
+            ? searchResults.map((url, index) => (
+                <SortablePhoto key={url.id} url={url.url} index={index} />
+              ))
+            : filteredItems.map((url, index) => (
+                <SortablePhoto key={url} url={url} index={index} />
+              ))}
         </Grid>
       </SortableContext>
 
