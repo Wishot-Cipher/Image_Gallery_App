@@ -6,7 +6,7 @@ import SearchBar from "./SearchBar";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { database } from "../../firebaseConfig/config";
 
-const ImageUploader = ({handleSearch, searchResults }) => {
+const ImageUploader = ({ handleSearch, searchResults }) => {
   const [images, setImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [tags, setTags] = useState("");
@@ -63,9 +63,16 @@ const ImageUploader = ({handleSearch, searchResults }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white border rounded-lg shadow-lg mb-16 mt-6">
+    <div
+      className="max-w-4xl mx-auto p-6 bg-white border rounded-lg  mb-16 mt-6"
+      style={{
+        boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+      }}
+    >
       <SearchBar handleSearch={handleSearch} />
-      <h2 className="text-xl font-bold mb-4 text-center">Upload Image</h2>
+      <h2 className="text-xl font-bold mb-4 text-center mt-3 text-shadow underline">
+        Upload Image
+      </h2>
       <div className="relative mb-4">
         <label
           htmlFor="file-upload"
@@ -85,7 +92,7 @@ const ImageUploader = ({handleSearch, searchResults }) => {
               d="M12 6v6m0 0v6m0-6h6m-6 0H6"
             ></path>
           </svg>
-          <span className="text-gray-800">Upload Images</span>
+          <span className="text-slate-800">Upload Images</span>
         </label>
         <input
           id="file-upload"
@@ -99,7 +106,9 @@ const ImageUploader = ({handleSearch, searchResults }) => {
 
       {images.length > 0 && (
         <div className="mb-4">
-          <h2 className="text-xl font-bold mb-2 text-center">Selected Images</h2>
+          <h2 className="text-xl font-bold mb-2 text-center">
+            Selected Images
+          </h2>
           <div className="flex flex-wrap">
             {images.map((image, index) => (
               <div key={index} className="relative">

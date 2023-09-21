@@ -20,12 +20,12 @@ const SearchBar = ({ handleSearch }) => {
         value={searchQuery}
         onChange={handleChange}
         placeholder="Search by tag..."
-        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         autoComplete="off" // Add this line
       />
 
       <button
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2"
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-pink-600 to-blue-600 text-white rounded-full p-2 font-bold"
         onClick={handleRefresh}
       >
         Reset

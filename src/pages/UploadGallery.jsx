@@ -1,3 +1,5 @@
+// UploadGallery.jsx
+
 import React, { useState, useEffect } from "react";
 import {
   DndContext,
@@ -50,7 +52,7 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
 
   useEffect(() => {
     const storageRef = ref(firestore);
-  
+
     listAll(storageRef)
       .then((res) => {
         const promises = res.items.map((item) => getDownloadURL(item));
@@ -114,35 +116,42 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDragCancel={handleDragCancel}
-    >
-      <SortableContext items={filteredItems} strategy={rectSortingStrategy}>
-        <Grid
-          columns={4}
-          searchResults={searchResults}
-          handleSearch={handleSearch}
-        >
-          {searchResults.length > 0
-            ? searchResults.map((url, index) => (
-                <SortablePhoto key={url.id} url={url.url} index={index} />
-              ))
-            : filteredItems.map((url, index) => (
-                <SortablePhoto key={url} url={url} index={index} />
-              ))}
-        </Grid>
-      </SortableContext>
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+      >
+        <SortableContext items={filteredItems} strategy={rectSortingStrategy}>
+          <Grid
+            columns={4}
+            searchResults={searchResults}
+            handleSearch={handleSearch}
+          >
+            {searchResults.length > 0
+              ? searchResults.map((url, index) => (
+                  <SortablePhoto
+                    key={url.id}
+                    url={url.url}
+                    index={index}
+                    tags={url.tags}
+                  />
+                ))
+              : filteredItems.map((url, index, tags) => (
+                  <SortablePhoto key={url} url={url} index={index} />
+                ))}
+          </Grid>
+        </SortableContext>
 
-      <DragOverlay adjustScale={true}>
-        {activeId ? (
-          <Photo url={activeId} index={items.indexOf(activeId)} />
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+        <DragOverlay adjustScale={true}>
+          {activeId ? (
+            <Photo url={activeId} index={items.indexOf(activeId)} />
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </>
   );
 };
 
