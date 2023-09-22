@@ -1,5 +1,3 @@
-// UploadGallery.jsx
-
 import React, { useState, useEffect } from "react";
 import {
   DndContext,
@@ -18,18 +16,18 @@ import {
 import { Grid } from "../components/ImageGallery/Grid";
 import { SortablePhoto } from "../components/ImageGallery/SortablePhoto";
 import { Photo } from "../components/ImageGallery/Photo";
-import { doc, getDoc } from "firebase/firestore";
-import { getDownloadURL, listAll, ref } from "firebase/storage";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { database } from "../firebaseConfig/config";
-import { firestore } from "../firebaseConfig/config";
+import { database, firestore } from "../firebaseConfig/config";
 import { auth } from "../firebaseConfig/config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { collection, getDocs, doc } from "firebase/firestore";
+// import { LoaderComponent } from "./LoaderComponent"; // Import your LoaderComponent
+import ReactSpinner from "../components/ImageGallery/ReactSpinner";
 
 const UploadGallery = ({ searchResults, handleSearch }) => {
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // Add isLoading state
   const mouse = useSensor(MouseSensor);
   const touch = useSensor(TouchSensor, {
     activationConstraint: {
@@ -39,7 +37,6 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
   });
   const sensors = useSensors(mouse, touch);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [filteredItems, setFilteredItems] = useState([]);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -53,43 +50,35 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
     return () => unsubscribe();
   }, []);
 
-// ...
-
-useEffect(() => {
-  const fetchImages = async () => {
-    const imagesCollectionRef = collection(database, "images");
-    const querySnapshot = await getDocs(imagesCollectionRef);
-
-    const downloadURLs = [];
-
-    querySnapshot.forEach((doc) => {
-      // Assuming you have a field 'url' in your document
-      const url = doc.data().url;
-      downloadURLs.push(url);
-    });
-
-    setItems(downloadURLs);
-  };
-
-  fetchImages().catch((error) => {
-    console.error("Error fetching images:", error);
-  });
-}, []);
-
-// ...
-
-
   useEffect(() => {
-    const filtered = items.filter((item) =>
-      searchResults.some((searchItem) => searchItem.id === item.id)
-    );
+    setIsLoading(true); // Set loading to true before fetching
 
-    if (searchResults.length > 0) {
-      setFilteredItems(filtered);
-    } else {
-      setFilteredItems(items);
-    }
-  }, [searchResults, items]);
+    const fetchImages = async () => {
+      try {
+        const imagesCollectionRef = collection(database, "images");
+        const querySnapshot = await getDocs(imagesCollectionRef);
+
+        const imageData = [];
+
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const url = data.url;
+          const tags = data.tags || [];
+          const id = doc.id; // Use the document ID as a unique identifier
+
+          imageData.push({ id, url, tags });
+        });
+
+        setItems(imageData);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      } finally {
+        setIsLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    fetchImages();
+  }, []);
 
   function handleDragStart(event) {
     if (!loggedIn) {
@@ -112,10 +101,13 @@ useEffect(() => {
   function handleDragEnd(event) {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
+    console.log("active:", active);
+    console.log("over:", over);
+
+    if (over && active.id !== over.id) {
       setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
 
         return arrayMove(items, oldIndex, newIndex);
       });
@@ -129,42 +121,51 @@ useEffect(() => {
   }
 
   return (
-    <>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onDragCancel={handleDragCancel}
-      >
-        <SortableContext items={filteredItems} strategy={rectSortingStrategy}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
+      {isLoading ? (
+        <ReactSpinner /> // Show loader while fetching
+      ) : (
+        <SortableContext items={items} strategy={rectSortingStrategy}>
           <Grid
             columns={4}
             searchResults={searchResults}
             handleSearch={handleSearch}
           >
             {searchResults.length > 0
-              ? searchResults.map((url, index) => (
+              ? searchResults.map((sort, index) => (
                   <SortablePhoto
-                    key={url.id}
-                    url={url.url}
+                    key={index}
+                    id={sort.id} // Include the id as a unique identifier
+                    url={sort}
                     index={index}
-                    tags={url.tags}
+                    tags={sort.tags}
                   />
                 ))
-              : filteredItems.map((url, index) => (
-                  <SortablePhoto key={url} url={url} index={index} />
+              : items.map((item, index) => (
+                  <SortablePhoto
+                    key={index}
+                    id={item.id} // Include the id as a unique identifier
+                    url={item}
+                    index={index}
+                    tags={item.tags}
+                  />
                 ))}
           </Grid>
         </SortableContext>
+      )}
 
-        <DragOverlay adjustScale={true}>
-          {activeId ? (
-            <Photo url={activeId} index={items.indexOf(activeId)} />
-          ) : null}
-        </DragOverlay>
-      </DndContext>
-    </>
+      <DragOverlay adjustScale={true}>
+        {activeId ? (
+          <Photo url={activeId} index={items.findIndex((item) => item.id === activeId)} />
+        ) : null}
+      </DragOverlay>
+    </DndContext>
   );
 };
 

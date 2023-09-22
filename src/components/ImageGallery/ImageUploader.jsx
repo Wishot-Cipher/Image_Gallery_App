@@ -111,6 +111,7 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
           </h2>
           <div className="flex flex-wrap">
             {images.map((image, index) => (
+              // {searchResults.length > 0 && searchResults[0].id !== "no-results" ? (
               <div key={index} className="relative">
                 <img
                   src={URL.createObjectURL(image)}

@@ -9,9 +9,12 @@ const SearchBar = ({ handleSearch }) => {
     handleSearch(value);
     console.log("Search Query:", value); // Add this line
   };
-  const handleRefresh = () =>{
-     setSearchQuery("")
-  }
+  
+  const handleRefresh = () => {
+  setSearchQuery("");
+  handleSearch(""); // Clear search results
+}
+
 
   return (
     <div className="relative flex items-center">
@@ -19,8 +22,8 @@ const SearchBar = ({ handleSearch }) => {
         type="text"
         value={searchQuery}
         onChange={handleChange}
-        placeholder="Search by tag..."
-        className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        placeholder="Search by tag, eg vacation, love..."
+        className="w-full px-4 py-2 font-bold rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         autoComplete="off" // Add this line
       />
 

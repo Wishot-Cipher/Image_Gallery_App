@@ -10,23 +10,41 @@ import UploadGallery from './pages/UploadGallery';
 const App = () => {
  const [searchResults, setSearchResults] = useState([]);
 
-  const handleSearch = async (searchQuery) => {
-    try {
-      const imagesRef = collection(database, "images");
-      const q = query(imagesRef, where("tags", "array-contains", searchQuery));
-      const querySnapshot = await getDocs(q);
+const handleSearch = async (searchQuery) => {
+  try {
+    const imagesRef = collection(database, "images");
 
-      const searchResults = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    if (searchQuery.trim() !== "") {
+      const querySnapshot = await getDocs(imagesRef);
 
-      setSearchResults(searchResults);
-      console.log("Search Query:", searchQuery);
-    } catch (error) {
-      console.error("Error searching images:", error);
+      const searchResults = querySnapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .filter((image) =>
+          image.tags.some((tag) =>
+            tag.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+        );
+
+      if (searchResults.length === 0) {
+        setSearchResults([{ id: "no-results", message: "No related tag" }]);
+      } else {
+        setSearchResults(searchResults);
+      }
+    } else {
+      setSearchResults([]);
     }
-  };
+
+    console.log("Search Query:", searchQuery);
+  } catch (error) {
+    console.error("Error searching images:", error);
+  }
+};
+
+
+
   return (
       <Routes>
         <Route path="/login" element={<Login />} />

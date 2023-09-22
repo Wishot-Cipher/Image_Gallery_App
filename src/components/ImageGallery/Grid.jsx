@@ -11,29 +11,22 @@ export function Grid({ children, columns, handleSearch, searchResults }) {
   return (
     <div>
       {!user && (
-        <div>
-          <nav className="bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500 p-4 flex justify-between items-center backdrop-blur-lg h-[10vh] lg:h-[11vh]">
-            <div className="text-white">
-              <h1 className="text-2xl font-bold flex items-center">
-                <img
-                  src={logo}
-                  alt="Logo"
-                  className="object-cover max-w-[25%] mr-2"
-                />
-                Gallery App
-              </h1>
-            </div>
-            <Link to={"/login"}>
-              <button className="bg-white text-indigo-500 py-2 px-6 rounded-full text-lg font-semibold shadow-md hover:shadow-lg transition duration-300">
-                Login
-              </button>
-            </Link>
-          </nav>
-        </div>
+        <nav className="bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500 p-4 flex justify-between items-center sticky top-0 backdrop-blur-lg h-[12vh]">
+          <div className="text-white">
+            <h1 className="text-2xl font-bold">
+              <img src={logo} alt="Logo" className="object-cover max-w-[65%]" />
+            </h1>
+          </div>
+          <Link to={"/login"}>
+            <button className="bg-white text-indigo-500 py-2 px-6 rounded-full text-lg font-semibold shadow-md hover:shadow-lg transition duration-300">
+              Login
+            </button>
+          </Link>
+        </nav>
       )}
 
       {user && (
-        <div className="flex justify-between p-4 bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500 h-[78px] lg:h-[11vh]">
+        <div className="flex justify-between p-4 bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500">
           <div className="text-white">
             <h1 className="text-2xl font-bold">Gallery</h1>
           </div>
@@ -51,9 +44,7 @@ export function Grid({ children, columns, handleSearch, searchResults }) {
           handleSearch={handleSearch}
         />
       )}
-          <h2 className="  mt-8 mb-4 underline text-3xl font-extrabold my-3 text-center text-[#BE123C] text-shadow">
-        Image Gallery
-      </h2>
+
       <div
         style={{
           display: "grid",

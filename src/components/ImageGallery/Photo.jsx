@@ -1,14 +1,14 @@
 import React, { forwardRef } from "react";
 
 export const Photo = forwardRef(
-  ({ url, index, faded, style, tags, ...props }, ref) => {
+  ({ url, index, faded, style, tags,image, ...props }, ref) => {
     return (
       <div
         ref={ref}
         style={{
           opacity: faded ? "0.2" : "1",
           transformOrigin: "0 0",
-          backgroundImage: `url("${url}")`,
+          backgroundImage: url ? `url("${url.url}")` : 'none',
           backgroundSize: "cover",
           backgroundPosition: "center",
           boxShadow: "rgba(0, 0, 0, 0.3) 0px 5px 10px",
@@ -21,7 +21,7 @@ export const Photo = forwardRef(
           index === 0 ? "h-[410px]" : "h-[350px] lg:h-[280px]"
         } block relative`}
       >
-        {/* {tags && (
+        {tags && (
           <div className="tags absolute bottom-4 left-4">
             {tags.map((tag, index) => (
               <span
@@ -32,7 +32,7 @@ export const Photo = forwardRef(
               </span>
             ))}
           </div>
-        )} */}
+        )}
       </div>
     );
   }

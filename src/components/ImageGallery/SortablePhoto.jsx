@@ -1,13 +1,11 @@
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-
-import React from 'react';
-import {useSortable} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
-
-import {Photo} from './Photo';
+import { Photo } from "./Photo";
 
 export const SortablePhoto = (props) => {
-  const sortable = useSortable({id: props.url});
+  const sortable = useSortable({ id: props.id });
   const {
     attributes,
     listeners,
@@ -19,8 +17,14 @@ export const SortablePhoto = (props) => {
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition, // Adjust the timing value (0.2s is the dura
   };
+
+  const tags = props.tags || [];
+  console.log(tags);
+
+  // Access the id prop
+  //  console.log('ID:', props.id);
 
   return (
     <Photo
@@ -29,7 +33,8 @@ export const SortablePhoto = (props) => {
       {...props}
       {...attributes}
       {...listeners}
+      tags={tags}
+      image={props.image}
     />
   );
 };
-
