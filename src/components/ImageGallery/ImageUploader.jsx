@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SearchBar from "./SearchBar";
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { database } from "../../firebaseConfig/config";
 
 const ImageUploader = ({ handleSearch, searchResults }) => {
@@ -63,14 +63,9 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
   };
 
   return (
-    <div
-      className="max-w-4xl mx-auto p-6 bg-white border rounded-lg  mb-16 mt-6"
-      style={{
-        boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-      }}
-    >
+    <div className="max-w-4xl mx-auto p-6 bg-white border rounded-lg mb-16 mt-6 shadow-lg">
       <SearchBar handleSearch={handleSearch} />
-      <h2 className="text-xl font-bold mb-4 text-center mt-3 text-shadow underline">
+      <h2 className="text-xl font-bold mb-4 text-center mt-3 underline">
         Upload Image
       </h2>
       <div className="relative mb-4">
@@ -92,7 +87,7 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
               d="M12 6v6m0 0v6m0-6h6m-6 0H6"
             ></path>
           </svg>
-          <span className="text-slate-800">Upload Images</span>
+          <span className="text-slate-700 font-bold">Upload Images</span>
         </label>
         <input
           id="file-upload"
@@ -111,7 +106,6 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
           </h2>
           <div className="flex flex-wrap">
             {images.map((image, index) => (
-              // {searchResults.length > 0 && searchResults[0].id !== "no-results" ? (
               <div key={index} className="relative">
                 <img
                   src={URL.createObjectURL(image)}
@@ -139,8 +133,9 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
         <input
           type="text"
           value={tags}
+          placeholder="e.g  love, sports"
           onChange={handleTagInputChange}
-          className="w-full px-3 py-2 border rounded-lg"
+          className="w-full px-3 py-2 border border-slate-400 rounded-lg font-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         />
       </div>
 
@@ -155,7 +150,7 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
       </button>
 
       {/* Display Search Results */}
-      {searchResults.length > 0 && (
+      {searchResults.length > 0 && searchResults[0].id !== "no-results" && (
         <div className="mb-4">
           <h2 className="text-xl font-bold mb-2 text-center">Search Results</h2>
           <div className="flex flex-wrap">
@@ -170,6 +165,11 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
             ))}
           </div>
         </div>
+      )}
+      {searchResults.length > 0 && searchResults[0].id === "no-results" && (
+        <p className="w-full text-center text-red-600 font-extrabold text-lg text-shadow my-3 decoration-wavy ">
+          {searchResults[0].message}
+        </p>
       )}
     </div>
   );

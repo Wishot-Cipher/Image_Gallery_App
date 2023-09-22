@@ -140,7 +140,7 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
             {searchResults.length > 0
               ? searchResults.map((sort, index) => (
                   <SortablePhoto
-                    key={index}
+                    key={sort.id}
                     id={sort.id} // Include the id as a unique identifier
                     url={sort}
                     index={index}
@@ -149,7 +149,7 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
                 ))
               : items.map((item, index) => (
                   <SortablePhoto
-                    key={index}
+                    key={item.id}
                     id={item.id} // Include the id as a unique identifier
                     url={item}
                     index={index}
@@ -160,9 +160,12 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
         </SortableContext>
       )}
 
-      <DragOverlay adjustScale={true}>
+      <DragOverlay adjustScale={true}  dropAnimation={null}>
         {activeId ? (
-          <Photo url={activeId} index={items.findIndex((item) => item.id === activeId)} />
+          <Photo
+            url={activeId}
+            index={items.findIndex((item) => item.id === activeId)}
+          />
         ) : null}
       </DragOverlay>
     </DndContext>

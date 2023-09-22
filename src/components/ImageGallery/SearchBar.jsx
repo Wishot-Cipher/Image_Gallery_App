@@ -22,8 +22,8 @@ const SearchBar = ({ handleSearch }) => {
         type="text"
         value={searchQuery}
         onChange={handleChange}
-        placeholder="Search by tag, eg vacation, love..."
-        className="w-full px-4 py-2 font-bold rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        placeholder="Search by tag.."
+        className="w-full px-4 py-2 font-bold rounded-lg border border-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 outline-none "
         autoComplete="off" // Add this line
       />
 

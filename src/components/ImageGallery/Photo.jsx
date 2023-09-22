@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 
 export const Photo = forwardRef(
-  ({ url, index, faded, style, tags,image, ...props }, ref) => {
+  ({ url, index, faded, style, tags, image, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -12,10 +12,12 @@ export const Photo = forwardRef(
           backgroundSize: "cover",
           backgroundPosition: "center",
           boxShadow: "rgba(0, 0, 0, 0.3) 0px 5px 10px",
+          transition: "transform 0.2s ease-in-out",
+          backgroundColor: "rgba(0, 0, 0, 0.2)", // Darker smoky background
           ...style,
         }}
         {...props}
-        className={`rounded-xl ${
+        className={`rounded-xl bg-transparent ${
           index === 0 ? "md:col-span-2 mb-0" : "md:mb-0"
         } ${
           index === 0 ? "h-[410px]" : "h-[350px] lg:h-[280px]"
@@ -26,7 +28,7 @@ export const Photo = forwardRef(
             {tags.map((tag, index) => (
               <span
                 key={index}
-                className="tag bg-indigo-500 text-white px-2 py-1 rounded-full text-sm mr-2 mb-2 inline-block"
+                className="tag bg-gradient-to-r from-pink-600 to-blue-700 border-2 border-blue-500 text-white font-bold px-3 py-1.5 rounded-xl text-sm mr-2 mb-2 inline-block"
               >
                 {tag}
               </span>
@@ -37,3 +39,5 @@ export const Photo = forwardRef(
     );
   }
 );
+
+

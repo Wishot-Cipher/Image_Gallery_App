@@ -29,7 +29,7 @@ const handleSearch = async (searchQuery) => {
         );
 
       if (searchResults.length === 0) {
-        setSearchResults([{ id: "no-results", message: "No related tag" }]);
+        setSearchResults([{ id: "no-results", message: "No Related Tag" }]);
       } else {
         setSearchResults(searchResults);
       }

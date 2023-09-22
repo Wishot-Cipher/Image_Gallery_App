@@ -84,6 +84,7 @@ const Register = () => {
                 <input
                   id="username"
                   name="username"
+                  placeholder="Username"
                   type="text"
                   autoComplete="username"
                   required
@@ -106,6 +107,7 @@ const Register = () => {
                   id="email"
                   name="email"
                   type="email"
+                  placeholder="Email"
                   autoComplete="email"
                   required
                   className="appearance-none block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -127,6 +129,7 @@ const Register = () => {
                   id="password"
                   name="password"
                   type="password"
+                  placeholder="Password"
                   autoComplete="new-password"
                   required
                   className="appearance-none block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -148,6 +151,7 @@ const Register = () => {
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
+                  placeholder="Comfirm Password"
                   autoComplete="new-password"
                   required
                   className="appearance-none block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
