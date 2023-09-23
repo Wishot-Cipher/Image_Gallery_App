@@ -33,10 +33,17 @@ export function Grid({ children, columns, handleSearch, searchResults }) {
       )}
 
       {user && (
-        <div className="flex justify-between p-4 bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500 h-[78px] lg:h-[11vh]">
-          <div className="text-white">
-            <h1 className="text-2xl font-bold">Gallery</h1>
-          </div>
+        <div className="flex justify-between py-4 px-2 lg:px-4 bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500 h-[78px] lg:h-[11vh]">
+            <div className="text-white ">
+              <h1 className="text-2xl font-bold flex items-center -mt-2.5">
+                <img
+                  src={logo}
+                  alt="Logo"
+                  className="object-cover max-w-[25%] mr-2"
+                />
+                Gallery App
+              </h1>
+            </div>
           <Link to="/login">
             <button className="bg-white text-indigo-500 py-2 px-6 rounded-full text-lg font-semibold shadow-md hover:shadow-lg transition duration-300">
               Logout
