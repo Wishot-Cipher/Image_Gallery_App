@@ -13,7 +13,7 @@ export const Photo = forwardRef(
           backgroundPosition: "center",
           boxShadow: "rgba(0, 0, 0, 0.3) 0px 5px 10px",
           transition: "transform 0.2s ease-in-out",
-          backgroundColor: "rgba(0, 0, 0, 0.2)", // Darker smoky background
+          backgroundColor: "rgba(0, 0, 0, 0.1)", // Darker smoky background
           ...style,
         }}
         {...props}

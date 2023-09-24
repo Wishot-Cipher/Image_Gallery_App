@@ -24,7 +24,7 @@ import {
   getDocs,
   query,
   orderBy,
-  onSnapshot, // Added for real-time updates
+  getDoc,
 } from "firebase/firestore";
 import ReactSpinner from "../components/ImageGallery/ReactSpinner";
 
@@ -65,46 +65,40 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
         imagesCollectionRef,
         orderBy("createdAt", "desc") // Sort by createdAt in descending order
       );
+      const querySnapshot = await getDocs(orderedData);
 
-      const unsubscribe = onSnapshot(orderedData, (querySnapshot) => {
-        const imageData = [];
+      const imageData = [];
 
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const url = data.url;
-          const tags = data.tags || [];
-          const id = doc.id;
-          const createdAt = data.createdAt;
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const url = data.url;
+        const tags = data.tags || [];
+        const id = doc.id;
+        const createdAt = data.createdAt;
 
-          imageData.push({ id, url, tags, createdAt });
-        });
-
-        setItems(imageData);
+        imageData.push({ id, url, tags, createdAt });
       });
 
-      return () => unsubscribe();
+      setItems(imageData);
     } catch (error) {
       console.error("Error fetching images:", error);
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 800);
+      setIsLoading(false);
     }
   };
 
   const paginatedData = (page) => {
-    const start = (page - 1) * 10;
-    const end = start + 10;
+    const start = (page - 1) * 2;
+    const end = start + 2;
     let filteredData = items.slice(start, end);
 
     setPaginatedItems(filteredData);
-    setTotalPages(Math.ceil(items.length / 10));
+    setTotalPages(Math.ceil(items.length / 2));
 
-    if (currentPage > Math.ceil(items.length / 10)) {
+    if (currentPage > Math.ceil(items.length / 2)) {
       setCurrentPage(1);
     }
   };
-  
 
   useEffect(() => {
     fetchImages();
@@ -112,8 +106,7 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
 
   useEffect(() => {
     paginatedData(currentPage);
-    // searchResults(currentPage);
-  }, [currentPage, items, searchResults]);
+  }, [currentPage, items]);
 
   function handleDragStart(event) {
     if (!loggedIn) {
@@ -137,11 +130,11 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      setPaginatedItems((paginatedItems) => {
-        const oldIndex = paginatedItems.findIndex((item) => item.id === active.id);
-        const newIndex = paginatedItems.findIndex((item) => item.id === over.id);
+      setPaginatedItems((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
 
-        return arrayMove(paginatedItems, oldIndex, newIndex);
+        return arrayMove(items, oldIndex, newIndex);
       });
     }
 
@@ -174,8 +167,6 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
               handleSearch={handleSearch}
               totalPages={totalPages}
               currentPage={currentPage}
-              // handlePageChange={handlePageChange}
-              setCurrentPage={setCurrentPage}
             >
               {searchResults.length > 0
                 ? searchResults.map((sort, index) => (
@@ -187,7 +178,7 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
                       tags={sort.tags}
                     />
                   ))
-                : paginatedItems.map((item, index) => (
+                : items.map((item, index) => (
                     <SortablePhoto
                       key={item.id}
                       id={item.id}

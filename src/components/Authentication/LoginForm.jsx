@@ -8,8 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
-  const [email, setEmail] = useState("user@example.com");
-  const [password, setPassword] = useState("1Password");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [user] = useAuthState(auth);
 
   const navigate = useNavigate();

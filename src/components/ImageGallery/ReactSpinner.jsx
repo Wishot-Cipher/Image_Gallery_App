@@ -24,8 +24,8 @@ export const ReactSpinnerMobile = () => {
     <div className="">
       <Oval
         ariaLabel="loading-indicator"
-        height={80}
-        width={90}
+        height={70}
+        width={75}
         strokeWidth={1}
         strokeWidthSecondary={2000}
         color="#32424C"

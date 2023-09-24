@@ -10,6 +10,7 @@ import UploadGallery from './pages/UploadGallery';
 const App = () => {
  const [searchResults, setSearchResults] = useState([]);
 
+
 const handleSearch = async (searchQuery) => {
   try {
     const imagesRef = collection(database, "images");
@@ -36,7 +37,7 @@ const handleSearch = async (searchQuery) => {
     } else {
       setSearchResults([]);
     }
-
+    setCurrentPage(1);
     console.log("Search Query:", searchQuery);
   } catch (error) {
     console.error("Error searching images:", error);

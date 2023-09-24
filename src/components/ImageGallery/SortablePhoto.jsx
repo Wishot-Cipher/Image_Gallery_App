@@ -21,7 +21,7 @@ export const SortablePhoto = (props) => {
   };
 
   const tags = props.tags || [];
-  console.log(tags);
+  // console.log(tags);
 
   // Access the id prop
   //  console.log('ID:', props.id);

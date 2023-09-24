@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SearchBar from "./SearchBar";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { database } from "../../firebaseConfig/config";
 
 const ImageUploader = ({ handleSearch, searchResults }) => {
@@ -39,9 +39,9 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
                 url: downloadURL,
                 altText: image.name,
                 tags: tagsArray,
+                createdAt: serverTimestamp(),
               })
                 .then(() => {
-                  toast.success("Image uploaded successfully!");
                   setIsUploading(false);
                   setImages([]);
                   setTags("");
@@ -53,6 +53,7 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
             .catch((error) => {
               console.error("Error getting download URL:", error);
             });
+          toast.success("Image uploaded successfully!");
         })
         .catch((error) => {
           console.error("Error uploading image:", error);
@@ -74,7 +75,7 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
           className="bg-white border border-gray-300 rounded-lg px-4 py-2 flex items-center justify-center cursor-pointer"
         >
           <svg
-            className="w-6 h-6 mr-2"
+            className="w-6 h-6 mr-2 font-bold text-slate-700"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
