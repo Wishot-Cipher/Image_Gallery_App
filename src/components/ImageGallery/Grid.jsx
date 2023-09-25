@@ -136,7 +136,7 @@ export function Grid({
         )}  
       </div>
       <footer className="bg-gray-100 text-center py-4 fixed bottom-0 w-full shadow-md">
-        <span className="text-slate-600 font-extrabold text-shadow text-lg">© 2023 Image Gallery by Wishot</span>
+        <span className="text-slate-600 font-extrabold text-shadow text-lg">© 2023 Image Gallery By Wishot</span>
       </footer>
     </div>
   );

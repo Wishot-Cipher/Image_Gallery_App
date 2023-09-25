@@ -17,14 +17,10 @@ export const SortablePhoto = (props) => {
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition, // Adjust the timing value (0.2s is the dura
+    transition,
   };
 
   const tags = props.tags || [];
-  // console.log(tags);
-
-  // Access the id prop
-  //  console.log('ID:', props.id);
 
   return (
     <Photo
@@ -35,6 +31,7 @@ export const SortablePhoto = (props) => {
       {...listeners}
       tags={tags}
       image={props.image}
+      isDragging={isDragging} // Pass the isDragging prop
     />
   );
 };

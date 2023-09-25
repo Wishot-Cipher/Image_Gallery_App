@@ -1,7 +1,25 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useContext } from "react";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
+import { database } from "../../firebaseConfig/config";
 
 export const Photo = forwardRef(
-  ({ url, index, faded, style, tags, image, ...props }, ref) => {
+  ({ url, index, faded, style, tags, image, isDragging, ...props }, ref) => {
+    // const handleDelete = async () => {
+    //   const { user } = getUser(); // Assuming you have a way to get the current user
+
+    //   const docRef = doc(database, "users", user.uid);
+    //   const docSnap = await getDoc(docRef);
+
+    //   if (docSnap.exists() && docSnap.data().role === "admin") {
+    //     // User is an admin, allow deletion
+    //     await deleteDoc(docRef);
+    //     // Implement delete logic here
+    //   } else {
+    //     // User is not an admin, show a message or handle it accordingly
+    //     console.log("You do not have permission to delete.");
+    //   }
+    // };
+
     return (
       <div
         ref={ref}
@@ -35,9 +53,17 @@ export const Photo = forwardRef(
             ))}
           </div>
         )}
+        {/* {!isDragging && (
+          <button
+            onClick={handleDelete}
+            className="absolute top-4 right-4 text-white bg-red-500 px-2 py-1 rounded-full z-50"
+          >
+            Delete
+          </button>
+        )} */}
       </div>
     );
   }
 );
 
-
+export default Photo;

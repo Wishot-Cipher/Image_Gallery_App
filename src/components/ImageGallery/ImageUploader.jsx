@@ -10,6 +10,7 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
   const [images, setImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [tags, setTags] = useState("");
+  const [isTagsValid, setIsTagsValid] = useState(true);
 
   const handleImageUpload = (e) => {
     const files = e.target.files;
@@ -18,50 +19,57 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
   };
 
   const handleTagInputChange = (e) => {
-    setTags(e.target.value);
+    const inputTags = e.target.value;
+    setTags(inputTags);
+    setIsTagsValid(inputTags.trim() !== "");
   };
 
-  const handleUpload = () => {
-    const storage = getStorage();
-    setIsUploading(true);
+ const handleUpload = () => {
+  const tagsArray = tags.split(",").map(tag => tag.trim());
+  if (tagsArray.length === 1 && tagsArray[0] === "") {
+    toast.error("Please add tags before uploading.");
+    return;
+  }
 
-    images.forEach((image) => {
-      const storageRef = ref(storage, image.name);
-      uploadBytes(storageRef, image)
-        .then((snapshot) => {
-          getDownloadURL(snapshot.ref)
-            .then((downloadURL) => {
-              const tagsArray = tags.split(",").map((tag) => tag.trim());
+  const storage = getStorage();
+  setIsUploading(true);
 
-              const imagesCollectionRef = collection(database, "images");
+  images.forEach((image) => {
+    const storageRef = ref(storage, image.name);
+    uploadBytes(storageRef, image)
+      .then((snapshot) => {
+        getDownloadURL(snapshot.ref)
+          .then((downloadURL) => {
+            const imagesCollectionRef = collection(database, "images");
 
-              addDoc(imagesCollectionRef, {
-                url: downloadURL,
-                altText: image.name,
-                tags: tagsArray,
-                createdAt: serverTimestamp(),
-              })
-                .then(() => {
-                  setIsUploading(false);
-                  setImages([]);
-                  setTags("");
-                })
-                .catch((error) => {
-                  console.error("Error adding document:", error);
-                });
+            addDoc(imagesCollectionRef, {
+              url: downloadURL,
+              altText: image.name,
+              tags: tagsArray,
+              createdAt: serverTimestamp(),
             })
-            .catch((error) => {
-              console.error("Error getting download URL:", error);
-            });
-          toast.success("Image uploaded successfully!");
-        })
-        .catch((error) => {
-          console.error("Error uploading image:", error);
-          toast.error("Image upload failed. Error: " + error);
-          setIsUploading(false);
-        });
-    });
-  };
+              .then(() => {
+                setIsUploading(false);
+                setImages([]);
+                setTags("");
+              })
+              .catch((error) => {
+                console.error("Error adding document:", error);
+              });
+          })
+          .catch((error) => {
+            console.error("Error getting download URL:", error);
+          });
+        toast.success("Image uploaded successfully!");
+      })
+      .catch((error) => {
+        console.error("Error uploading image:", error);
+        toast.error("Image upload failed. Error: " + error);
+        setIsUploading(false);
+      });
+  });
+};
+
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white border rounded-lg mb-16 mt-6 shadow-lg">
@@ -139,13 +147,14 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
           className="w-full px-3 py-2 border border-slate-400 rounded-lg font-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         />
       </div>
-
       <button
         onClick={handleUpload}
         className={`bg-gradient-to-r from-pink-400 to-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-lx hover:bg-slate-800 w-[50%] mx-auto block ${
-          images.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+          images.length === 0 || !isTagsValid
+            ? "opacity-50 cursor-not-allowed"
+            : ""
         }`}
-        disabled={isUploading || images.length === 0}
+        disabled={isUploading || images.length === 0 || !isTagsValid}
       >
         {isUploading ? "Uploading..." : "Upload Images"}
       </button>
