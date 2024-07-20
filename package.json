@@ -11,6 +11,7 @@
   "dependencies": {
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/sortable": "^7.0.2",
+    "file-saver": "^2.0.5",
     "firebase": "^10.4.0",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
@@ -21,6 +22,7 @@
     "react-icons": "^4.11.0",
     "react-loader-spinner": "^5.4.5",
     "react-loading-skeleton": "^3.3.1",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.16.0",
     "react-spinners": "^0.13.8",
     "react-toastify": "^9.1.3",

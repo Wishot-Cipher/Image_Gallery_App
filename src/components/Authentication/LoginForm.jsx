@@ -61,6 +61,27 @@ export const LoginForm = () => {
           <h2 className="text-[30px] md:text-[35px] font-extrabold text-slate-800 mb-4 text-3xl text-center">
             Log In
           </h2>
+
+          {/* Default Login Details Section */}
+          <div className="bg-gray-100 p-4 rounded-lg shadow-md mb-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-2">Try Logging In With Default Credentials</h3>
+            <p className="text-sm text-gray-600 mb-2">
+              <strong>Email:</strong> demo@example.com
+            </p>
+            <p className="text-sm text-gray-600 mb-4">
+              <strong>Password:</strong> password123
+            </p>
+            <button
+              onClick={() => {
+                setEmail('demo@example.com');
+                setPassword('password123');
+              }}
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Use Default Credentials
+            </button>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label

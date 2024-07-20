@@ -17,8 +17,6 @@ import { Grid } from "../components/ImageGallery/Grid";
 import { SortablePhoto } from "../components/ImageGallery/SortablePhoto";
 import { Photo } from "../components/ImageGallery/Photo";
 import { database, auth } from "../firebaseConfig/config";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import {
   collection,
   getDocs,
@@ -104,7 +102,6 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
       setCurrentPage(1);
     }
   };
-  
 
   useEffect(() => {
     fetchImages();
@@ -174,7 +171,6 @@ const UploadGallery = ({ searchResults, handleSearch }) => {
               handleSearch={handleSearch}
               totalPages={totalPages}
               currentPage={currentPage}
-              // handlePageChange={handlePageChange}
               setCurrentPage={setCurrentPage}
             >
               {searchResults.length > 0
