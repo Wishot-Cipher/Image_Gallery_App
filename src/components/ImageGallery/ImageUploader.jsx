@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import SearchBar from "./SearchBar";
 import { database } from "../../firebaseConfig/config";
-import { auth } from "../../firebaseConfig/config"; // Import Firebase Auth
+import { auth } from "../../firebaseConfig/config";
 
 const ImageUploader = ({ handleSearch, searchResults }) => {
   const [images, setImages] = useState([]);
@@ -17,16 +17,20 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
   const [tags, setTags] = useState("");
   const [isTagsValid, setIsTagsValid] = useState(true);
   const [userRole, setUserRole] = useState("");
+  const [loadingRole, setLoadingRole] = useState(true);
 
   useEffect(() => {
     const fetchUserRole = async () => {
-      const user = auth.currentUser; // Get the currently logged-in user
+      const user = auth.currentUser;
       if (user) {
-        const userDoc = await getDoc(doc(database, "users", user.uid)); // Fetch user document from Firestore
+        const userDoc = await getDoc(doc(database, "users", user.uid));
         if (userDoc.exists()) {
-          setUserRole(userDoc.data().role); // Set the user role from Firestore
+          setUserRole(userDoc.data().role);
         }
+      } else {
+        console.error("User is not authenticated");
       }
+      setLoadingRole(false);
     };
 
     fetchUserRole();
@@ -45,6 +49,16 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
   };
 
   const handleUpload = () => {
+    if (!auth.currentUser) {
+      console.error("User is not authenticated");
+      return;
+    }
+
+    if (!isTagsValid) {
+      console.error("Please add valid tags before uploading.");
+      return;
+    }
+
     const tagsArray = tags.split(",").map((tag) => tag.trim());
     if (tagsArray.length === 1 && tagsArray[0] === "") {
       console.error("Please add tags before uploading.");
@@ -55,7 +69,7 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
     setIsUploading(true);
 
     images.forEach((image) => {
-      const storageRef = ref(storage, image.name);
+      const storageRef = ref(storage, `images/${image.name}`);
       uploadBytes(storageRef, image)
         .then((snapshot) => {
           getDownloadURL(snapshot.ref)
@@ -75,10 +89,12 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
                 })
                 .catch((error) => {
                   console.error("Error adding document:", error);
+                  setIsUploading(false);
                 });
             })
             .catch((error) => {
               console.error("Error getting download URL:", error);
+              setIsUploading(false);
             });
           console.log("Image uploaded successfully!");
         })
@@ -93,7 +109,9 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
     <div className="max-w-4xl mx-auto p-6 bg-white border rounded-lg mb-16 mt-6 shadow-lg">
       <SearchBar handleSearch={handleSearch} />
 
-      {userRole === "Admin" && (
+      {loadingRole ? (
+        <p className="text-center">Loading...</p>
+      ) : userRole === "Admin" ? (
         <>
           <h2 className="text-xl font-bold mb-4 text-center mt-3 underline">
             Upload Image
@@ -182,6 +200,8 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
             {isUploading ? "Uploading..." : "Upload Images"}
           </button>
         </>
+      ) : (
+        <p className="text-center text-red-600 font-bold">You do not have permission to upload images.</p>
       )}
 
       {/* Display Search Results */}
