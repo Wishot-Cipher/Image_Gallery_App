@@ -4,6 +4,9 @@ import logo from "../../assets/unnamed.gif";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebaseConfig/config";
 import { Link } from "react-router-dom";
+import fav from "../../assets/fav.jfif"
+import { FavoritesGallery } from "./FavoritesGallery";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 export function Grid({
   children,
@@ -12,27 +15,52 @@ export function Grid({
   searchResults,
   totalPages,
   currentPage,
-  setCurrentPage
+  setCurrentPage,
 }) {
   const [user] = useAuthState(auth);
   const [scrollToTop, setScrollToTop] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false); // Modal for favorites
+  const [favorites, setFavorites] = useState([]); // Initialize favorites as an empty array
+  const firestore = getFirestore();
 
+  // Scroll to top when page changes
   useEffect(() => {
     if (scrollToTop) {
       window.scrollTo({
         top: 200,
-        behavior: "smooth"
+        behavior: "smooth",
       });
       setScrollToTop(false);
     }
   }, [scrollToTop]);
 
   function handlePageChange(page) {
-    console.log("Changing page to:", page);
     setCurrentPage(page);
     setScrollToTop(true);
   }
 
+  // Fetch user's favorite photos from Firestore
+  const fetchFavorites = async () => {
+    if (!user) return;
+    try {
+      const favoritesCollection = collection(
+        firestore,
+        "users",
+        user.uid,
+        "favorites"
+      );
+      const favoritesSnapshot = await getDocs(favoritesCollection);
+      const fetchedFavorites = favoritesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("Fetched favorites:", fetchedFavorites); // Check what is being fetched
+      setFavorites(fetchedFavorites);
+      setShowFavorites(true);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    }
+  };
 
   return (
     <div>
@@ -60,7 +88,7 @@ export function Grid({
 
       {user && (
         <div className="flex justify-between py-4 px-2 lg:px-4 bg-gradient-to-r from-[#10132E] via-purple-950 to-indigo-950 h-[78px] lg:h-[11vh]">
-          <div className="text-white ">
+          <div className="text-white">
             <h1 className="text-2xl font-bold flex items-center -mt-2.5">
               <img
                 src={logo}
@@ -84,9 +112,27 @@ export function Grid({
           handleSearch={handleSearch}
         />
       )}
-      <h2 className="  mt-8 mb-4 underline text-3xl font-extrabold my-3 text-center text-indigo-950 text-shadow" id="sroll">
-        Image Gallery
-      </h2>
+
+      <div
+        className="mt-8 mb-4"
+        id="scroll"
+      >
+        <div className="flex items-center md:justify-center space-x-4 justify-around">
+          <h2 className="md:text-3xl font-extrabold text-indigo-950 text-shadow text-2xl">
+            <span className="underline">Explore Now!</span>
+          </h2>
+          
+          <button
+            className="bg-gradient-to-r from-[#10132E] via-purple-900 to-indigo-950 text-white py-1 md:py-2 px-4 rounded-lg font-bold shadow-md hover:shadow-lg transition duration-300 flex justify-center align-middle"
+            onClick={fetchFavorites} // Fetch favorites on click
+            >
+              <span className="mt-2 mr-1">Favorites</span>
+            
+            <img src={fav} alt="favorite image" className=" w-10 rounded-full" />
+          </button>
+            </div>
+      </div>
+
       <div
         style={{
           display: "grid",
@@ -97,6 +143,7 @@ export function Grid({
       >
         {children}
       </div>
+
       <div className="flex justify-center my-5 mb-16">
         {totalPages > 1 && searchResults.length === 0 && (
           <nav>
@@ -133,10 +180,21 @@ export function Grid({
               </li>
             </ul>
           </nav>
-        )}  
+        )}
       </div>
+
+      {/* Render the Favorites component when showFavorites is true */}
+      {showFavorites && (
+        <FavoritesGallery
+          favorites={favorites} // Pass the fetched favorites array to the FavoritesGallery component
+          onClose={() => setShowFavorites(false)} // Close the modal when "Close" is clicked
+        />
+      )}
+
       <footer className="bg-gray-100 text-center py-4 fixed bottom-0 w-full shadow-lg">
-        <span className="text-[#10132E] opacity-95 font-extrabold text-shadow text-lg">© 2023 Image Gallery By Wishot</span>
+        <span className="text-[#10132E] opacity-95 font-extrabold text-shadow text-lg">
+          © 2023 Image Gallery By Wishot
+        </span>
       </footer>
     </div>
   );

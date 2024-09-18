@@ -201,7 +201,7 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
           </button>
         </>
       ) : (
-        <p className="text-center text-red-600 font-bold">You do not have permission to upload images.</p>
+        <p className="text-center text-red-600 font-bold"></p>
       )}
 
       {/* Display Search Results */}
