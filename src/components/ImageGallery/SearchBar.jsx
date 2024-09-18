@@ -28,7 +28,7 @@ const SearchBar = ({ handleSearch }) => {
       />
 
       <button
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-pink-600 to-blue-600 text-white rounded-lg p-2 font-bold"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-[#10132E] via-purple-950 to-indigo-950 text-white rounded-lg p-2 font-bold"
         onClick={handleRefresh}
       >
         Reset

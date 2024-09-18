@@ -190,7 +190,7 @@ const ImageUploader = ({ handleSearch, searchResults }) => {
           </div>
           <button
             onClick={handleUpload}
-            className={`bg-gradient-to-r from-pink-400 to-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-lx hover:bg-slate-800 w-[50%] mx-auto block ${
+            className={`bg-gradient-to-r from-[#10132E] via-purple-950 to-indigo-950 text-white font-bold py-2 px-4 rounded-lg shadow-lx hover:bg-slate-800 w-[50%] mx-auto block ${
               images.length === 0 || !isTagsValid
                 ? "opacity-50 cursor-not-allowed"
                 : ""

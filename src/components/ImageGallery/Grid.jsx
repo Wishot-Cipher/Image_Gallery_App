@@ -38,7 +38,7 @@ export function Grid({
     <div>
       {!user && (
         <div>
-          <nav className="bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500 p-4 flex justify-between items-center backdrop-blur-lg h-[10vh] lg:h-[11vh]">
+          <nav className="bg-gradient-to-r from-[#10132E] via-purple-950 to-indigo-950 p-4 flex justify-between items-center backdrop-blur-lg h-[10vh] lg:h-[11vh]">
             <div className="text-white">
               <h1 className="text-2xl font-bold flex items-center">
                 <img
@@ -50,7 +50,7 @@ export function Grid({
               </h1>
             </div>
             <Link to={"/login"}>
-              <button className="bg-white text-indigo-500 py-2 px-6 rounded-full text-lg font-semibold shadow-md hover:shadow-lg transition duration-300">
+              <button className="bg-white text-indigo-950 py-2 px-6 rounded-full text-lg font-semibold shadow-md hover:shadow-lg transition duration-300">
                 Login
               </button>
             </Link>
@@ -59,7 +59,7 @@ export function Grid({
       )}
 
       {user && (
-        <div className="flex justify-between py-4 px-2 lg:px-4 bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-500 h-[78px] lg:h-[11vh]">
+        <div className="flex justify-between py-4 px-2 lg:px-4 bg-gradient-to-r from-[#10132E] via-purple-950 to-indigo-950 h-[78px] lg:h-[11vh]">
           <div className="text-white ">
             <h1 className="text-2xl font-bold flex items-center -mt-2.5">
               <img
@@ -71,7 +71,7 @@ export function Grid({
             </h1>
           </div>
           <Link to="/login">
-            <button className="bg-white text-indigo-500 py-2 px-6 rounded-full text-lg font-semibold shadow-md hover:shadow-lg transition duration-300">
+            <button className="bg-white text-[#10132e] py-2 px-6 rounded-full text-lg font-bold shadow-md hover:shadow-lg transition duration-300">
               Logout
             </button>
           </Link>
@@ -84,7 +84,7 @@ export function Grid({
           handleSearch={handleSearch}
         />
       )}
-      <h2 className="  mt-8 mb-4 underline text-3xl font-extrabold my-3 text-center text-[#BE123C] text-shadow" id="sroll">
+      <h2 className="  mt-8 mb-4 underline text-3xl font-extrabold my-3 text-center text-indigo-950 text-shadow" id="sroll">
         Image Gallery
       </h2>
       <div
@@ -106,8 +106,8 @@ export function Grid({
                   onClick={() => handlePageChange(currentPage - 1)}
                   className={`px-4 py-2 rounded-xl ${
                     currentPage === 1
-                      ? "bg-gradient-to-r from-pink-400 via-purple-200 to-indigo-400 cursor-not-allowed border-2 border-indigo-400"
-                      : "bg-gradient-to-r from-pink-600 via-purple-500 to-indigo-700 border-2 border-indigo-700 text-white hover:bg-blue-700"
+                      ? "bg-gradient-to-r from-[#10132e] via-purple-200 to-indigo-400 cursor-not-allowed border-2 border-indigo-400 font-bold text-gray-950"
+                      : "bg-gradient-to-r from-[#10132e] via-purple-900 to-indigo-950 border-2 border-indigo-900 text-white hover:bg-blue-900 font-bold"
                   }`}
                   disabled={currentPage === 1}
                 >
@@ -123,8 +123,8 @@ export function Grid({
                   onClick={() => handlePageChange(currentPage + 1)}
                   className={`px-4 py-2 rounded-xl ${
                     currentPage === totalPages
-                      ? "bg-gradient-to-r from-pink-400 via-purple-200 to-indigo-400 cursor-not-allowed border-2 border-indigo-400"
-                      : "bg-gradient-to-r from-pink-600 via-purple-500 to-indigo-700 border-2 border-indigo-700 text-white hover:bg-blue-700"
+                      ? "bg-gradient-to-r from-[#10132e] via-purple-200 to-indigo-400 cursor-not-allowed border-2 border-indigo-400 font-bold text-gray-950"
+                      : "bg-gradient-to-r from-[#10132e] via-purple-900 to-indigo-950 border-2 border-indigo-900 text-white hover:bg-blue-900 font-bold"
                   }`}
                   disabled={currentPage === totalPages}
                 >
@@ -135,8 +135,8 @@ export function Grid({
           </nav>
         )}  
       </div>
-      <footer className="bg-gray-100 text-center py-4 fixed bottom-0 w-full shadow-md">
-        <span className="text-slate-600 font-extrabold text-shadow text-lg">© 2023 Image Gallery By Wishot</span>
+      <footer className="bg-gray-100 text-center py-4 fixed bottom-0 w-full shadow-lg">
+        <span className="text-[#10132E] opacity-95 font-extrabold text-shadow text-lg">© 2023 Image Gallery By Wishot</span>
       </footer>
     </div>
   );
